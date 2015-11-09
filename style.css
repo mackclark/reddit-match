@@ -1,0 +1,48 @@
+* {
+	box-sizing: border-box;
+}
+html body {
+	background-color: #70D9D4;
+}
+
+img{
+		
+		border-radius: 20%;
+
+	}
+.photo{
+	min-width: 200px;
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+.photo{
+	margin: 5%;
+	height: 300px;
+}
+.title, #title-long {
+
+	margin-top: 150px;
+	margin-bottom: 150px;
+	
+	}
+
+.titles {
+
+	font-size: 1em;
+}
+.title{
+	border: 1px solid black;
+}
+#title-long{
+	font-size: .75em;
+}
+
+ul {
+	list-style: none;
+}
+
+.gridster ul li {
+	border: 1px solid black;
+	background-size: contain;
+	background-repeat: no-repeat;
+}

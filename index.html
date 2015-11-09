@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+	
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="dist/jquery.gridster.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.css">
+
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js'></script>
+		<meta name="viewport" content="width=devicewidth,initial-scale=1">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="index.js"></script>
+		<script src="dist/jquery.gridster.min.js"></script>
+	</head>
+
+	<body ng-app="reddit-match">
+		<div ng-controller="RedditMatchCtrl" class="row">
+			<!--<div class="photos col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>-->
+			<div>
+				<ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+					<li ng-repeat="card in cards">
+						<img src="{{card.data.url}}" />
+					</li>
+
+				</ul>
+			</div>
+		</div>
+
+		
+	</body>
+</html>
