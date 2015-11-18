@@ -1,124 +1,140 @@
 
-angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$window", "$http",function($scope, $window, $http){
+angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$window", "$http","$sce","shuffle","answerChoices", function($scope, $window, $http, $sce, shuffle,answerChoices){
 	$scope.cards = {};
-	console.log('scalklj');
+	$scope.shuffledTitles = {};
+	$scope.answerChoices = {};
+	$scope.begin = 0;  
+    $scope.end = 1;
+    $scope.score = 0;
+    $scope.subreddits = ['catloaf', 'animalsbeingderps', 'mildlystartledcats', 'tinyanimalsonfingers', 'HoldMyNip'];
+    var after;
+     
 
 	$http.get("http://www.reddit.com/r/aww/.json").then(
-		successCallback, errorCallback
-
-		);
+		successCallback, errorCallback);
+   $scope.loadPhotos = function(subreddit){
+			$http.get("http://www.reddit.com/r/"+subreddit+"/.json").then(
+		successCallback, errorCallback);
+	}
 	function successCallback(response){
 		$scope.cards = response.data.data.children;
+		after = response.data.data.after;
 		angular.forEach($scope.cards, function(card, index) {
-			if(card.data.url.indexOf('imgur') == -1){
-				$scope.cards.splice(index, 1, card);
-				console.log(card);
+			if((card.data.domain != 'imgur.com' && card.data.domain != 'i.imgur.com') || card.data.url.indexOf('.gifv') != -1){
+				$scope.cards.splice(index, 1);
 			}
-			if(card.data.url.indexOf('.jpg') == -1 && card.data.url.indexOf('.gfv') == -1){
-				card.data.url = card.data.url + '.jpg';
-			}
+			// if(card.data.post_hint == 'rich:video' ){
+			// 	card.data.safeUrl = $sce.trustAsResourceUrl(card.data.url);
+			// 	console.log(card.data.safeUrl)
+			// }
 		});
-		console.log($scope.cards);
+
+		angular.forEach($scope.cards, function(card, index) {
+			if(card.data.url.indexOf('.jpg') == -1 && card.data.url.indexOf('.gifv') == -1 && card.data.url.indexOf('.png') == -1){
+				card.data.url = card.data.url + '.jpg';
+			}if(card.data.url.indexOf('.gifv') != -1){
+				card.data.vidId = card.data.url.split("imgur.com")[1].split(".gifv")[0].split("/")[1]
+				console.log(card.data.vidId)
+			}
+
+			
+		});
+		$scope.shuffledCards = shuffle($scope.cards);
+		$scope.answers = shuffle(answerChoices($scope.shuffledCards, $scope.cards[$scope.begin]));
 	}
 	function errorCallback(){
 		alert('nope');
 	}
 
-}]).service("Cards",["DataSrc",function(DataSrc){
-    // var dataSrc = new DataSrc("/json/user/skills",{key:"id",dataType:"NoDupesArray"});
-    // return dataSrc;
-}])
 
+	 $scope.loadMore = function(){
+            if($scope.begin < $scope.cards.length-1){
+              $scope.begin += 1;  
+              $scope.end += 1;
+              $scope.answers = 0;
+              $scope.shuffledCards = shuffle($scope.shuffledCards);
+           	  $scope.answers = shuffle(answerChoices($scope.shuffledCards, $scope.cards[$scope.begin]));
+            }else{
+            	$http.get("http://www.reddit.com/r/aww/.json?after="+after).then(
+		successCallback, errorCallback);
+            	$scope.begin = 0;  
+              	$scope.end = 1;
+            	
+            }
+           
+        };
+     $scope.checkMatch = function(title){
+     	if(title == $scope.cards[$scope.begin]){
+     		alert('MATCH');
+     		$scope.score ++
+     		$scope.loadMore();
+     	}else{
+     		alert('MISMATCH');
+     	}
+     }
+     
+}]).factory("shuffle", function(){
+	//puting shuffle in it's own factory in case we want to make some other iteration of the game where all cards are shuffled or something like that
+	return function shuffle(array) {
+		//makes a copy of the original aray before shuffling to avoid shuffling original array
+		array = array.slice(0,array.length)
+		  var m = array.length, t, i;
 
+		  // While there remain elements to shuffle…
+		  while (m) {
 
+		    // Pick a remaining element…
+		    i = Math.floor(Math.random() * m--);
 
+		    // And swap it with the current element.
+		    t = array[m];
+		    array[m] = array[i];
+		    array[i] = t;
+		  }
 
+		return array;
+	}
 
+}).factory("answerChoices", function(){
 
+	//slices two cards off the shuffle and inserts the answer card into that new array
+	return function answerChoices(array, card){
+			var newArray = [];
+		//push answer card into new array
+		newArray.push(card);
+		//push in new cards but makes sure they aren't duplicate of the answer card
+		angular.forEach(array, function(shuffleCard){
+			if(newArray.length < 3){
+				if(shuffleCard != card){
+					newArray.push(shuffleCard);
+				}
+			}else{
+				
+				return
+			}
 
-
-
-
-
-// $.getJSON("http://www.reddit.com/r/aww/.json?jsonp=?", function(data) { 
-
-//     $.each(data.data.children, function(i,item){
-	    		
-//     	var url = item.data.url
-// 	   /* 
-// 		different way to do it, which i might want again later
-// 	   if (item.data.url.length < 29) {
-// 	    		$("<img class='photo'/>").attr("src", item.data.url+".jpg").appendTo(".photos");
-// 	    		}
-// 	    else {
-// 	    		$("<img class='photo'/>").attr("src", item.data.url).appendTo(".photos");
-// 	    	}*/
-// 	    	//this way sets the image as the background image of the div rather than creating an img element
-// 	    	 if (item.data.url.length < 29) {
-
-// 	    		$("<div class='photo'>").css("background-image", 'url('+url+".jpg"+')').appendTo(".photos");
-// 	    		$("</div>").appendTo(".photos");
-// 	    		}
-// 	    	else {
-// 	    		$("<div class='photo'>").css("background-image", 'url('+url+')').appendTo(".photos");
-// 	    		$("</div>").appendTo(".photos");
-// 	    	}
-		
-// 		//adding the titles
-
-// 		if (item.data.url.length < 29) {
-
-//      			$("<li class='data-row='1' data-col='1' data-sizex='2' data-sizey='2' text-center title'>").text(item.data.title).css("background-image", 'url('+url+".jpg"+')').appendTo(".titles");
-//      			}
-// 	    	else {
-//      			$("<li class='data-row='1' data-col='1'' data-sizex='2' data-sizey='2' text-center title'>").text(item.data.title).css("background-image", 'url('+url+')').appendTo(".titles");
-//      			}
-
-//     	$("</li>").appendTo(".titles"); 
-
-//     	return i<10;
-
-//     });
-
-
-
-
-
-// 	var cards=$(".title");
+		});
+		return newArray;
+	}
 	
-// 	shuffleCards(cards)
-
-// function shuffleCards(cards){
-// 	// maybe dont need to re-assign variable
 	
-// 	var currentIndex = cards.length, temporaryValue, randomIndex;
+}).config(function($sceDelegateProvider){
+	 $sceDelegateProvider.resourceUrlWhitelist([
+	   // Allow same origin resource loads.
+	   'self',
+	   // Allow loading from our assets domain.  Notice the difference between * and **.
+	   'http://imgur.com',
+	   'http://i.imgur.com/**']);
 
-// 	// While there remain elements to shuffle...
-// 	while (0 !== currentIndex) {
-// 		// Pick a remaining element...
-// 		randomIndex = Math.floor(Math.random() * currentIndex);
-// 		currentIndex -= 1;
+})
+//add items into an array until it has 3 items, don't allow any duplicates to be added. 
 
-// 		// And swap it with the current element.
-// 		temporaryValue = cards[currentIndex];
-// 		cards[currentIndex] = cards[randomIndex];
-// 		cards[randomIndex] = temporaryValue;
-// 	};
-// 	cards.each(function(index,card){
-// 		$(".titles").prepend(card);
-// 	});
-// 	return cards;
-// };
+//need loading bar for when picture is loading
+//need to prevent duplicates from being pushed into answer array
+//need to figure out how to get videos to play
+//would be cool to add a dropdown of other subreddits so you can select one and pass that into the get request- maybe earth porn, pics, cute kids, cat high five
 
 
-// $(function(){ //DOM Ready
- 
-//     $(".gridster ul").gridster({
-//         widget_margins: [10, 20],
-//         widget_base_dimensions: [140, 200]
-//     });
- 
-// });
- 
-// });
+
+
 

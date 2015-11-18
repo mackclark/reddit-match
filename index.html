@@ -4,27 +4,47 @@
 	<head>
 	
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="style.css">
 		<link rel="stylesheet" href="dist/jquery.gridster.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.css">
+		<link rel="stylesheet" href="style.css">
 
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js'></script>
 		<meta name="viewport" content="width=devicewidth,initial-scale=1">
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="index.js"></script>
-		<script src="dist/jquery.gridster.min.js"></script>
 	</head>
 
 	<body ng-app="reddit-match">
 		<div ng-controller="RedditMatchCtrl" class="row">
-			<!--<div class="photos col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 col-xs-4 col-sm-4 col-md-4 col-lg-4"></div>-->
 			<div>
-				<ul class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
-					<li ng-repeat="card in cards">
-						<img src="{{card.data.url}}" />
+				<h1>Score: {{score}}</h1>
+				<p>don't like r/awww? pick a different one:</p>
+				<div >
+					<ul>
+						<li ng-repeat="subreddit in subreddits" ng-click="loadPhotos(subreddit)">
+							<label for="subreddit"><input type='radio' name="subreddit"   >{{subreddit}}</label>
+						</li>
+					</ul>
+					
+				</div>
+				<ul>
+					<li  class="photo-list small-centered small-10 columns" ng-repeat="card in cards.slice(begin, end) track by $index">
+						<img ng-if="card.data.post_hint != 'rich:video'"class="photo" src="{{card.data.url}}"/>
+						<!-- <video ng-if="card.data.post_hint == 'rich:video'" poster="{{card.data.url}}"/> -->
+						<blockquote class="imgur-embed-pub" lang="en" data-id="{{card.data.vidId}}"><a href="{{card.data.url}}"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+					</li>
+				</ul>
+
+				<ul class="answers" >
+					<h3>Choose the correct title:</h3>
+					<li class="title" ng-if="card.data.post_hint" ng-repeat="card in answers track by $index">
+						<label for="title" ng-click="checkMatch(card)">{{card.data.title}}<input type="radio" name="title"></label>
 					</li>
 
 				</ul>
+				<div class="row">
+					<button class="next-button columns small-3" ng-click="loadMore()">Next</div>
+				</div>
 			</div>
 		</div>
 

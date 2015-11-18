@@ -5,44 +5,34 @@ html body {
 	background-color: #70D9D4;
 }
 
-img{
-		
-		border-radius: 20%;
-
-	}
 .photo{
-	min-width: 200px;
-	background-size: contain;
-	background-repeat: no-repeat;
+	border-radius: 6%;
+	height: auto;
+	width: auto;
+	max-height: 500px;
 }
-.photo{
-	margin: 5%;
-	height: 300px;
+video{
+	border-radius: 6%;
+	height: auto;
+	width: auto;
 }
-.title, #title-long {
 
-	margin-top: 150px;
-	margin-bottom: 150px;
-	
-	}
-
-.titles {
-
-	font-size: 1em;
-}
-.title{
-	border: 1px solid black;
-}
-#title-long{
-	font-size: .75em;
+.next-button{
+	border-radius: 5px;
+	float: right;
+	margin: 10px;
 }
 
 ul {
 	list-style: none;
 }
-
-.gridster ul li {
-	border: 1px solid black;
-	background-size: contain;
-	background-repeat: no-repeat;
+.answers{
+	margin-bottom: 0;
+	font-size: 12px;
+}
+.answers li:hover{
+	font-size: 15px;
+}
+input[type=radio]{
+	display: none;
 }
