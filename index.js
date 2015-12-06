@@ -7,13 +7,14 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
     $scope.end = 1;
     $scope.score = 0;
     $scope.subreddits = ['catloaf', 'animalsbeingderps', 'mildlystartledcats', 'tinyanimalsonfingers', 'HoldMyNip'];
-    var after;
+    var after, changedPage;
      
 
 	$http.get("http://www.reddit.com/r/aww/.json").then(
 		successCallback, errorCallback);
    $scope.loadPhotos = function(subreddit){
-			$http.get("http://www.reddit.com/r/"+subreddit+"/.json").then(
+   		changedPage = subreddit;
+		$http.get("http://www.reddit.com/r/"+subreddit+"/.json").then(
 		successCallback, errorCallback);
 	}
 	function successCallback(response){
@@ -23,18 +24,14 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 			if((card.data.domain != 'imgur.com' && card.data.domain != 'i.imgur.com') || card.data.url.indexOf('.gifv') != -1){
 				$scope.cards.splice(index, 1);
 			}
-			// if(card.data.post_hint == 'rich:video' ){
-			// 	card.data.safeUrl = $sce.trustAsResourceUrl(card.data.url);
-			// 	console.log(card.data.safeUrl)
-			// }
 		});
 
 		angular.forEach($scope.cards, function(card, index) {
 			if(card.data.url.indexOf('.jpg') == -1 && card.data.url.indexOf('.gifv') == -1 && card.data.url.indexOf('.png') == -1){
 				card.data.url = card.data.url + '.jpg';
 			}if(card.data.url.indexOf('.gifv') != -1){
-				card.data.vidId = card.data.url.split("imgur.com")[1].split(".gifv")[0].split("/")[1]
-				console.log(card.data.vidId)
+				//card.data.vidId = card.data.url.split("imgur.com")[1].split(".gifv")[0].split("/")[1]
+				card.data.safeUrl = $sce.trustAsResourceUrl(card.data.url.split(".gifv")[0]+'.webm');
 			}
 
 			
@@ -48,6 +45,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 
 
 	 $scope.loadMore = function(){
+	 	var subreddit = !changedPage ? 'aww' : changedPage;
             if($scope.begin < $scope.cards.length-1){
               $scope.begin += 1;  
               $scope.end += 1;
@@ -55,7 +53,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
               $scope.shuffledCards = shuffle($scope.shuffledCards);
            	  $scope.answers = shuffle(answerChoices($scope.shuffledCards, $scope.cards[$scope.begin]));
             }else{
-            	$http.get("http://www.reddit.com/r/aww/.json?after="+after).then(
+            	$http.get("http://www.reddit.com/r/"+subreddit+"/.json?after="+after).then(
 		successCallback, errorCallback);
             	$scope.begin = 0;  
               	$scope.end = 1;

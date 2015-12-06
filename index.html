@@ -30,8 +30,18 @@
 				<ul>
 					<li  class="photo-list small-centered small-10 columns" ng-repeat="card in cards.slice(begin, end) track by $index">
 						<img ng-if="card.data.post_hint != 'rich:video'"class="photo" src="{{card.data.url}}"/>
-						<!-- <video ng-if="card.data.post_hint == 'rich:video'" poster="{{card.data.url}}"/> -->
-						<blockquote class="imgur-embed-pub" lang="en" data-id="{{card.data.vidId}}"><a href="{{card.data.url}}"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+						<!-- this isn't working right now- I suspect the iframe is loading before the card.data.vidId somehow, so it's just pulling in nothing. but either way, it's not going  to work because the embed code includes the title. Would need to find a way around that I think -->
+						<!-- <blockquote class="imgur-embed-pub" lang="en" data-id="{{card.data.vidId}}"><a href="{{card.data.url}}"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script> {{card.data.vidId}}, {{card.data.url}} -->
+
+						<!-- from http://stackoverflow.com/questions/31681969/imgur-gifv-file-doesnt-load-as-expected-using-video-tag -->
+
+						<!-- <iframe class="imgur-embed" width="200" height="200" frameborder="0" src="{{card.data.safeUrl}}"></iframe> -->
+						<video ng-if="card.data.post_hint == 'rich:video'" preload="auto" autoplay="autoplay" loop="loop">
+    						<source src="{{card.data.safeUrl}}" type="video/webm"></source>
+						</video>
+
+						
+
 					</li>
 				</ul>
 
@@ -43,7 +53,7 @@
 
 				</ul>
 				<div class="row">
-					<button class="next-button columns small-3" ng-click="loadMore()">Next</div>
+					<button class="next-button columns small-3" ng-click="loadMore(subreddit)">Next</div>
 				</div>
 			</div>
 		</div>
