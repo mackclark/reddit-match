@@ -1,5 +1,5 @@
 
-angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$window", "$http","$sce","shuffle","answerChoices", function($scope, $window, $http, $sce, shuffle,answerChoices){
+angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$window", "$http","$sce","shuffle","answerChoices", "$timeout", function($scope, $window, $http, $sce, shuffle,answerChoices, $timeout){
 	$scope.cards = {};
 	$scope.shuffledTitles = {};
 	$scope.answerChoices = {};
@@ -31,6 +31,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 				card.data.url = card.data.url + '.jpg';
 			}if(card.data.url.indexOf('.gifv') != -1){
 				//card.data.vidId = card.data.url.split("imgur.com")[1].split(".gifv")[0].split("/")[1]
+				card.video = true;
 				card.data.safeUrl = $sce.trustAsResourceUrl(card.data.url.split(".gifv")[0]+'.webm');
 			}
 
@@ -61,13 +62,15 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
             }
            
         };
-     $scope.checkMatch = function(title){
-     	if(title == $scope.cards[$scope.begin]){
-     		alert('MATCH');
+     $scope.checkMatch = function(card){
+     	if(card == $scope.cards[$scope.begin]){
+     		card.correct = true;
      		$scope.score ++
-     		$scope.loadMore();
+     		$timeout(function(){
+     			$scope.loadMore()
+     		}, 700);
      	}else{
-     		alert('MISMATCH');
+     		card.incorrect = true;
      	}
      }
      
@@ -102,6 +105,8 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 		newArray.push(card);
 		//push in new cards but makes sure they aren't duplicate of the answer card
 		angular.forEach(array, function(shuffleCard){
+			card.correct = false;
+			card.incorrect = false;
 			if(newArray.length < 3){
 				if(shuffleCard != card){
 					newArray.push(shuffleCard);
@@ -112,6 +117,11 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 			}
 
 		});
+		angular.forEach(newArray, function(card){
+			card.correct = false;
+			card.incorrect = false;
+		});
+		console.log(newArray);
 		return newArray;
 	}
 	
@@ -124,7 +134,17 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 	   'http://imgur.com',
 	   'http://i.imgur.com/**']);
 
-})
+}).directive('imageonload', function() { //http://stackoverflow.com/questions/17884399/image-loaded-event-in-for-ng-src-in-angularjs
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                element.bind('error', function() {
+                    //call the function that was passed
+                    scope.$apply(attrs.imageonload);
+                });
+            }
+        };
+    })
 //add items into an array until it has 3 items, don't allow any duplicates to be added. 
 
 //need loading bar for when picture is loading
