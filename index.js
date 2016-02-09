@@ -32,7 +32,8 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 			}if(card.data.url.indexOf('.gifv') != -1){
 				//card.data.vidId = card.data.url.split("imgur.com")[1].split(".gifv")[0].split("/")[1]
 				card.video = true;
-				card.data.safeUrl = $sce.trustAsResourceUrl(card.data.url.split(".gifv")[0]+'.webm');
+				card.data.safeUrlwebm = $sce.trustAsResourceUrl(card.data.url.split(".gifv")[0]+'.webm');
+				card.data.safeUrlmp4 = $sce.trustAsResourceUrl(card.data.url.split(".gifv")[0]+'.mp4');
 			}
 
 			
@@ -121,7 +122,6 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 			card.correct = false;
 			card.incorrect = false;
 		});
-		console.log(newArray);
 		return newArray;
 	}
 	

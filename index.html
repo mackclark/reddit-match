@@ -31,9 +31,11 @@
 						<ul class="col-md-8">
 							<li  class="photo-list" ng-repeat="card in cards.slice(begin, end) track by $index">
 								<img ng-if="!card.video"class="photo" src="{{card.data.url}}" imageonload="loadMore()"/>
-								<video ng-if="card.video" preload="auto" autoplay="autoplay" loop="loop">
-		    						<source ng-src="{{card.data.safeUrl}}" type="video/webm"></source>
+								<video controls="true" ng-if="card.video" preload="auto" autoplay  loop="loop">
+		    						<source ng-src="{{card.data.safeUrlwebm}}" type="video/webm"></source>
+		    						<source src="{{card.data.safeUrlmp4}}" type="video/mp4">
 								</video>
+
 							</li>
 						</ul>
 						<div class="col-md-4">
