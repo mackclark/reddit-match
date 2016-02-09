@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+	
+		<meta charset="utf-8">
+ 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="style.css">
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js'></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-animate.min.js"></script>
+		<script src='ui-bootstrap-1.1.2.js'></script>
+		<meta name="viewport" content="width=devicewidth,initial-scale=1">
+		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>  
+		<script src="index.js"></script>
+	</head>
+
+	<body ng-app="reddit-match">
+		<header class="header-image">
+        	<div class="headline">
+	            <div class="container">
+	                <h1>REDDIT MATCH</h1>
+	                <h2>match the photo to the title it was posted with on <a href="https://www.reddit.com/r/aww/">reddit.com/r/aww</a></h2>
+	            </div>
+	        </div>
+	    </header>
+		<div ng-controller="RedditMatchCtrl" >
+			<div class="container">
+				<div class="featurette">
+					<h2>Score: {{score}}</h2>
+					<div class="row">		
+						<ul class="col-md-8">
+							<li  class="photo-list" ng-repeat="card in cards.slice(begin, end) track by $index">
+								<img ng-if="!card.video"class="photo" src="{{card.data.url}}" imageonload="loadMore()"/>
+								<video controls="true" ng-if="card.video" preload="auto" autoplay  loop="loop">
+		    						<source ng-src="{{card.data.safeUrlwebm}}" type="video/webm"></source>
+		    						<source src="{{card.data.safeUrlmp4}}" type="video/mp4">
+								</video>
+
+							</li>
+						</ul>
+						<div class="col-md-4">
+							<div class="row">
+								<ul class="answers col-md-12" >
+									<h3>Choose the correct title:</h3>
+									<li class="title" ng-if="card.data.post_hint" ng-repeat="card in answers track by $index" ng-class="{'incorrect': card.incorrect, 'correct': card.correct}">
+										<label for="title" ng-click="checkMatch(card)">{{card.data.title}}<input type="radio" name="title"></label>
+									</li>
+
+								</ul>
+								<div class="col-md-12">
+									<button class="btn btn-primary btn-lg btn-block" ng-click="loadMore()">skip</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<footer>
+					<div class="row">
+						<div class="col-sm-4">
+							<h2> Bored? Try a different subreddit:</h2>
+							<div ng-repeat="subreddit in subreddits" ng-click="loadPhotos(subreddit)"><a>{{subreddit}}</a></div>
+						</div>
+						<div class="col-sm-4">
+							<div classs="about">
+								<h2> About</h2>
+								<p> Hi! I'm <a href="https://github.com/mackclark">mackclark</a> and I built this game using the <a href="https://www.reddit.com/dev/api">Reddit API</a> because I love Reddit, cute animals and coding. Check it out on <a href="https://github.com/mackclark/reddit-match">Github.</a></p>
+								<p>And this is my cat, who sat on me while I created this >></p>
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<img class="img-responsive" src="cat.jpg">
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>		
+	</body>
+</html>
