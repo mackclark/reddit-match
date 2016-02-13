@@ -4,9 +4,8 @@
 html body {
 	background-color: #f0eceb;
 }
-.featurette p, .featurette h2, .featurette h1, .featurette h3{
+.featurette p, .featurette h2:not(.text-danger), .featurette h1, .featurette h3{
 	color: #283018;
-
 }
 a{
 	cursor: pointer;
@@ -27,7 +26,7 @@ header h1{
 	height: auto;
 	width: auto;
 	max-height: 750px;
-	max-width: 625px;
+	max-width: 100%;
 }
 video{
 	height: auto;

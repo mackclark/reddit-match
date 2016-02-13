@@ -18,6 +18,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 		successCallback, errorCallback);
 	}
 	function successCallback(response){
+		$scope.errorMessage = false;
 		$scope.cards = response.data.data.children;
 		after = response.data.data.after;
 		angular.forEach($scope.cards, function(card, index) {
@@ -42,7 +43,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 		$scope.answers = shuffle(answerChoices($scope.shuffledCards, $scope.cards[$scope.begin]));
 	}
 	function errorCallback(){
-		alert('nope');
+		$scope.errorMessage = true;
 	}
 
 

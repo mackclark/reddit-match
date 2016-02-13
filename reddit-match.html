@@ -5,30 +5,29 @@
 	
 		<meta charset="utf-8">
  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="reddit-match.css">
 		<script src='https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js'></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-animate.min.js"></script>
-		<script src='ui-bootstrap-1.1.2.js'></script>
 		<meta name="viewport" content="width=devicewidth,initial-scale=1">
 		 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>  
-		<script src="index.js"></script>
+		<script src="reddit-match.js"></script>
 	</head>
 
 	<body ng-app="reddit-match">
 		<header class="header-image">
         	<div class="headline">
-	            <div class="container">
+	            <div class="container-fluid">
 	                <h1>REDDIT MATCH</h1>
 	                <h2>match the photo to the title it was posted with on <a href="https://www.reddit.com/r/aww/">reddit.com/r/aww</a></h2>
 	            </div>
 	        </div>
 	    </header>
 		<div ng-controller="RedditMatchCtrl" >
-			<div class="container">
+			<div class="container-fluid">
 				<div class="featurette">
 					<h2>Score: {{score}}</h2>
 					<div class="row">		
-						<ul class="col-md-8">
+						<ul class="col-xs-12 col-md-8">
 							<li  class="photo-list" ng-repeat="card in cards.slice(begin, end) track by $index">
 								<img ng-if="!card.video"class="photo" src="{{card.data.url}}" imageonload="loadMore()"/>
 								<video controls="true" ng-if="card.video" preload="auto" autoplay  loop="loop">
@@ -36,6 +35,8 @@
 		    						<source src="{{card.data.safeUrlmp4}}" type="video/mp4">
 								</video>
 
+							</li>
+							<li ng-if="errorMessage" > <h2 class="text-danger">Whoops, looks like there was a problem getting images from reddit. Try refreshing the page. </h2>
 							</li>
 						</ul>
 						<div class="col-md-4">
