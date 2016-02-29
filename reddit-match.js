@@ -6,10 +6,8 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 	$scope.begin = 0;  
     $scope.end = 1;
     $scope.score = 0;
-    $scope.subreddits = ['catloaf', 'animalsbeingderps', 'mildlystartledcats', 'tinyanimalsonfingers', 'HoldMyNip'];
+    $scope.subreddits = ['catloaf', 'animalsbeingderps', 'mildlystartledcats', 'tinyanimalsonfingers', 'HoldMyNip', 'StuffOnCats'];
     var after, changedPage;
-     
-
 	$http.get("http://www.reddit.com/r/aww/.json").then(
 		successCallback, errorCallback);
    $scope.loadPhotos = function(subreddit){
@@ -41,9 +39,11 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
 		});
 		$scope.shuffledCards = shuffle($scope.cards);
 		$scope.answers = shuffle(answerChoices($scope.shuffledCards, $scope.cards[$scope.begin]));
+		$('body').animate({scrollTop:0}, 500, 'swing');
 	}
 	function errorCallback(){
 		$scope.errorMessage = true;
+		$('body').animate({scrollTop:0}, 500, 'swing');
 	}
 
 
@@ -62,7 +62,7 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
               	$scope.end = 1;
             	
             }
-           
+           $('body').animate({scrollTop:0}, 500, 'swing');
         };
      $scope.checkMatch = function(card){
      	if(card == $scope.cards[$scope.begin]){
@@ -73,6 +73,9 @@ angular.module("reddit-match",[]).controller("RedditMatchCtrl",["$scope", "$wind
      		}, 700);
      	}else{
      		card.incorrect = true;
+     		$timeout(function(){
+     			card.incorrect = false;
+     		}, 500);
      	}
      }
      

@@ -14,11 +14,11 @@
 	</head>
 
 	<body ng-app="reddit-match">
-		<header class="header-image">
+		<header class="header-image" id="header">
         	<div class="headline">
 	            <div class="container-fluid">
-	                <h1>REDDIT MATCH</h1>
-	                <h2>match the photo to the title it was posted with on <a href="https://www.reddit.com/r/aww/">reddit.com/r/aww</a></h2>
+	                <h1>REDDIT MATCH: <span>match the photo to the title it was posted with on <a href="https://www.reddit.com/r/aww/">reddit.com/r/aww</a></span></h1>
+	                
 	            </div>
 	        </div>
 	    </header>
@@ -28,28 +28,30 @@
 					<h2>Score: {{score}}</h2>
 					<div class="row">		
 						<ul class="col-xs-12 col-md-8">
-							<li  class="photo-list" ng-repeat="card in cards.slice(begin, end) track by $index">
-								<img ng-if="!card.video"class="photo" src="{{card.data.url}}" imageonload="loadMore()"/>
-								<video controls="true" ng-if="card.video" preload="auto" autoplay  loop="loop">
-		    						<source ng-src="{{card.data.safeUrlwebm}}" type="video/webm"></source>
-		    						<source src="{{card.data.safeUrlmp4}}" type="video/mp4">
-								</video>
+							<li class="photo-list" ng-repeat="card in cards.slice(begin, end) track by $index">
+								<a title="{{card.data.ups}}" ng-href="https://www.reddit.com{{card.data.permalink}}" target="_blank">
+									<img ng-if="!card.video"class="photo" src="{{card.data.url}}" imageonload="loadMore()"/>
+									<video controls="true" ng-if="card.video" preload="auto" autoplay  loop="loop">
+			    						<source ng-src="{{card.data.safeUrlwebm}}" type="video/webm"></source>
+			    						<source src="{{card.data.safeUrlmp4}}" type="video/mp4">
+									</video>
+								</a>
 
 							</li>
 							<li ng-if="errorMessage" > <h2 class="text-danger">Whoops, looks like there was a problem getting images from reddit. Try refreshing the page. </h2>
 							</li>
 						</ul>
-						<div class="col-md-4">
+						<div class="col-xs-12 col-md-4">
 							<div class="row">
 								<ul class="answers col-md-12" >
-									<h3>Choose the correct title:</h3>
-									<li class="title" ng-if="card.data.post_hint" ng-repeat="card in answers track by $index" ng-class="{'incorrect': card.incorrect, 'correct': card.correct}">
-										<label for="title" ng-click="checkMatch(card)">{{card.data.title}}<input type="radio" name="title"></label>
+									<h1>Choose the correct title:</h1>
+									<li class="btn btn-primary btn-lg btn-block" ng-click="checkMatch(card)" ng-if="card.data.post_hint" ng-repeat="card in answers track by $index" ng-class="{'incorrect': card.incorrect, 'correct': card.correct}">
+										<label for="title">{{card.data.title}}<input type="radio" name="title"></label>
 									</li>
 
 								</ul>
 								<div class="col-md-12">
-									<button class="btn btn-primary btn-lg btn-block" ng-click="loadMore()">skip</button>
+									<a ng-click="loadMore()">skip</a>
 								</div>
 							</div>
 						</div>
@@ -58,20 +60,27 @@
 				<hr>
 				<footer>
 					<div class="row">
-						<div class="col-sm-4">
+						<div class="col-sm-8">
 							<h2> Bored? Try a different subreddit:</h2>
-							<div ng-repeat="subreddit in subreddits" ng-click="loadPhotos(subreddit)"><a>{{subreddit}}</a></div>
+							<ul class="row">
+								<li class="subreddit col-md-4 col-sm-4 col-xs-6" ng-repeat="subreddit in subreddits" ng-click="loadPhotos(subreddit)">
+									<div class="box">
+										<a>
+											<img ng-src="images/{{subreddit}}.jpg">
+											<p>{{subreddit}}</p>
+										</a>
+									</div>
+								</li>
+							</ul>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-3">
 							<div classs="about">
 								<h2> About</h2>
 								<p> Hi! I'm <a href="https://github.com/mackclark">mackclark</a> and I built this game using the <a href="https://www.reddit.com/dev/api">Reddit API</a> because I love Reddit, cute animals and coding. Check it out on <a href="https://github.com/mackclark/reddit-match">Github.</a></p>
-								<p>And this is my cat, who sat on me while I created this >></p>
+								<p>And this is my cat, who sat on me while I created it </p>
+								<img class="img-responsive brunqy" src="images/cat.jpg">
 							</div>
-						</div>
-						<div class="col-sm-4">
-							<img class="img-responsive" src="cat.jpg">
-						</div>
+						</div>						
 					</div>
 				</footer>
 			</div>

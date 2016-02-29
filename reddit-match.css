@@ -7,20 +7,29 @@ html body {
 .featurette p, .featurette h2:not(.text-danger), .featurette h1, .featurette h3{
 	color: #283018;
 }
+.featurette h1{
+	font-size: 45px;
+}
 a{
 	cursor: pointer;
 }
 footer a{
 	color: #aa863a;
 }
+footer ul{
+	padding-left: 0;
+}
 header{
 	background-color: #729f98;
 	color: #f0eceb;
-	min-height: 200px;
 }
 header h1{
-	font-size: 50px;
-	margin-top: 30px;
+	font-size: 35px;
+	margin-top: 20px;
+}
+
+header h1 span{
+	font-size: 20px;
 }
 .photo{
 	height: auto;
@@ -32,27 +41,40 @@ video{
 	height: auto;
 	width: auto;
 }
-.correct{
-	color: green;
-	transition: color .4s linear;
+.btn-block.correct{
+	background-color: #729f82;
+	border-color: #729f82;
+	transition: all .4s linear;
 
 }
 .game-container{
 	border: 5px solid #666;
 }
-.incorrect {
-	color: red;
-	transition: color .5s linear .4s;
+.btn-block.incorrect {
 	animation: shake .4s linear;
 }
-button.btn-primary{
-	margin-top: 30px;
+.subreddit img{
+	max-width: 100%;
+}
+.subreddit .box{
+	border: 1px solid #729f98;
 	background-color: #729f98;
-	border-color: #729f98;
+	margin-bottom: 20px;
+	border-radius: 3px;
+
 }
-footer img{
-	max-height: 250px;
+.subreddit a{
+	color: white;
+	text-align: center;
+	vertical-align: center;
 }
+.brunqy{
+	max-height: 200px;
+	border-radius: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 hr{
 	border-top: 1px solid black;
 }
@@ -70,8 +92,15 @@ hr{
 		margin-left: 0px;
 	}
 }
-
-ul:not(.answers) {
+.btn-block{
+	width: 100%;
+	height: auto;
+	margin: 15px 0px;
+	white-space: normal;
+	background-color: #729f98;
+	border-color: #729f98;
+}
+ul {
 	list-style: none;
 }
 .answers{
